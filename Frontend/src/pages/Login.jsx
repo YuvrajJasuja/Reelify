@@ -1,18 +1,8 @@
 import { useState } from "react";
 import "../css/Login.css";
 import Navbar from "../pages/Navbar";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
- //sending content using axios to backend
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-      try {
-        const response = await axios.post("/api/login", { email, password },{withCredentials: true }); 
-        console.log("Login successful:", response.data);
-      } catch (error) {
-        console.error("Login failed:", error.response ? error.response.data : error.message);
-      }};
-      
 /* ── SVG Icons ── */
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24">
@@ -44,8 +34,28 @@ const SparkleIcon = () => (
 
 /* ── Sign In Form ── */
 function SignInForm() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  //sending login request to backend using axios
+    const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "http://localhost:1000/api/user/login",
+        { email, password },
+        { withCredentials: true }
+      );
+
+      console.log("Login successful:", response.data);
+      navigate("/");
+      alert("Login successful");
+    } catch (error) {
+      console.error("Login failed:", error.response?.data);
+      alert("Login failed");
+    }
+  };
   return (
     <div className="form-inner">
       <p className="form-eyebrow">Welcome back</p>
@@ -91,6 +101,27 @@ function SignInForm() {
 
 /* ── Sign Up Form ── */
 function SignUpForm() {
+  const navigate = useNavigate();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:1000/api/user/createUser",
+        { fullName,email, password },
+        { withCredentials: true }
+      );
+      console.log("Account created successfully:", response.data);
+        navigate("/");
+        alert("Account created successfully");
+    } catch (error) {
+      console.error("Login failed:", error.response?.data);
+      alert("Login failed");
+    }
+  };
   return (
     <div className="form-inner">
       <p className="form-eyebrow">Get started</p>
@@ -99,20 +130,31 @@ function SignUpForm() {
 
       <div className="field">
         <label>Full Name</label>
-        <input type="text" placeholder="John Doe" />
+        <input type="text" placeholder="John Doe" 
+          value={fullName}
+          onChange={(e) => setFullName(e.target.value)}
+        />
       </div>
 
       <div className="field">
         <label>Email</label>
-        <input type="email" placeholder="you@example.com" />
+        <input type="email" placeholder="you@example.com" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
 
       <div className="field">
         <label>Password</label>
-        <input type="password" placeholder="Create a strong password" />
+        <input type="password" placeholder="Create a strong password" 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </div>
 
-      <button className="btn-primary" style={{ marginTop: "8px" }}>Create Account</button>
+      <button className="btn-primary" style={{ marginTop: "8px" }} onClick={handleSubmit}>
+        Create Account
+      </button>
 
       <div className="or-divider"><span>or sign up with</span></div>
 

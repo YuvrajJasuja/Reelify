@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const userRoute = require('./src/Routes/userRoute');
+const reelRoute = require('./src/Routes/reelRoute');
 const connectDB = require('./src/db');
 const cors = require('cors');
 require('dotenv').config();
@@ -27,6 +28,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api', userRoute);
+app.use('/api', reelRoute);
 
 app.listen(port, () => {
     console.log(`✓ Server started at http://localhost:${port}`);
