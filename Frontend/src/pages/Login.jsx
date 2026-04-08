@@ -1,7 +1,18 @@
 import { useState } from "react";
 import "../css/Login.css";
 import Navbar from "../pages/Navbar";
+import axios from "axios";
 
+ //sending content using axios to backend
+    const handleSubmit = async (e) => {
+      e.preventDefault();
+      try {
+        const response = await axios.post("/api/login", { email, password },{withCredentials: true }); 
+        console.log("Login successful:", response.data);
+      } catch (error) {
+        console.error("Login failed:", error.response ? error.response.data : error.message);
+      }};
+      
 /* ── SVG Icons ── */
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24">
@@ -33,6 +44,8 @@ const SparkleIcon = () => (
 
 /* ── Sign In Form ── */
 function SignInForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   return (
     <div className="form-inner">
       <p className="form-eyebrow">Welcome back</p>
@@ -41,12 +54,18 @@ function SignInForm() {
 
       <div className="field">
         <label>Email</label>
-        <input type="email" placeholder="you@example.com" />
+        <input type="email" placeholder="you@example.com" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
       </div>
 
       <div className="field">
         <label>Password</label>
-        <input type="password" placeholder="••••••••" />
+        <input type="password" placeholder="••••••••" 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
       </div>
 
       <div className="field-row">
@@ -56,7 +75,9 @@ function SignInForm() {
         <a href="#" className="forgot-link">Forgot password?</a>
       </div>
 
-      <button className="btn-primary">Sign In</button>
+      <button className="btn-primary" onClick={handleSubmit}>
+        Sign In
+      </button>
 
       <div className="or-divider"><span>or continue with</span></div>
 
