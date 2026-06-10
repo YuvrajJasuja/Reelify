@@ -1,0 +1,52 @@
+[
+  {
+    "_id": "defaultreel1",
+    "user": "demouserid12345",
+    "businessName": "ZenBrew Coffee",
+    "category": "Food & Drink",
+    "description": "Morning Brew Ritual #coffee #food",
+    "reel": "http://localhost:1000/uploads/food.mp4",
+    "bussinessUrl": "https://zenbrew.coffee",
+    "uploadedAt": "2026-06-10T05:02:42.589Z"
+  },
+  {
+    "_id": "defaultreel2",
+    "user": "demouserid12345",
+    "businessName": "FitForge Gym",
+    "category": "Fitness",
+    "description": "5-Min Full Body Burn #fitness #workout",
+    "reel": "http://localhost:1000/uploads/fitness.mp4",
+    "bussinessUrl": "https://fitforge.com",
+    "uploadedAt": "2026-06-10T05:02:42.589Z"
+  },
+  {
+    "_id": "defaultreel3",
+    "user": "demouserid12345",
+    "businessName": "Nova Skin Studio",
+    "category": "Beauty",
+    "description": "Summer Glow Routine #beauty #glow",
+    "reel": "http://localhost:1000/uploads/beauty.mp4",
+    "bussinessUrl": "https://novaskin.studio",
+    "uploadedAt": "2026-06-10T05:02:42.589Z"
+  },
+  {
+    "_id": "defaultreel4",
+    "user": "demouserid12345",
+    "businessName": "Bloom Florist",
+    "category": "Lifestyle",
+    "description": "Wildflower Arrangement #lifestyle #flowers",
+    "reel": "http://localhost:1000/uploads/lifestyle.mp4",
+    "bussinessUrl": "https://bloomflorist.com",
+    "uploadedAt": "2026-06-10T05:02:42.589Z"
+  },
+  {
+    "_id": "defaultreel5",
+    "user": "demouserid12345",
+    "businessName": "Wanderlust Agency",
+    "category": "Travel",
+    "description": "Explore the world #travel #cinematic",
+    "reel": "http://localhost:1000/uploads/travel.mp4",
+    "bussinessUrl": "https://wanderlust.com",
+    "uploadedAt": "2026-06-10T05:02:42.589Z"
+  }
+]

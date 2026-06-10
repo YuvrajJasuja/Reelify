@@ -1,17 +1,26 @@
+const connectDB = require('./src/db');
 require('dotenv').config();
-require('./src/dbFallback');
 
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const path = require('path');
 const userRoute = require('./src/Routes/userRoute');
 const reelRoute = require('./src/Routes/reelRoute');
-const connectDB = require('./src/db');
+
 const cors = require('cors');
 
 const app = express();
 const corsOptions = {
-    origin: 'http://localhost:5173', // Replace with your frontend URL
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps, curl, etc.)
+        if (!origin) return callback(null, true);
+        // Allow localhost for local testing and resolve dynamic ports
+        if (origin.startsWith('http://localhost:') || origin.startsWith('http://127.0.0.1:')) {
+            return callback(null, true);
+        }
+        // In production, you can add your deployed URL or allow dynamically
+        return callback(null, true);
+    },
     credentials: true, // Allow cookies to be sent
 };
 app.use(cors(corsOptions));

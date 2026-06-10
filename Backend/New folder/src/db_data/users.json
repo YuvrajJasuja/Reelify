@@ -1,0 +1,18 @@
+[
+  {
+    "_id": "demouserid12345",
+    "fullName": "Demo Business",
+    "email": "demo@reelify.com",
+    "password": "hashedpassworddummy",
+    "createdAt": "2026-06-10T05:02:42.587Z",
+    "updatedAt": "2026-06-10T05:02:42.588Z"
+  },
+  {
+    "fullName": "Test User",
+    "email": "test@example.com",
+    "password": "$2b$10$ojO586NfjfqomhambWGIBOpebIPUkpRMqHKdXD/eFXDF9I9O0ks9S",
+    "_id": "losjtwwmq7lx2v9",
+    "createdAt": "2026-06-10T05:07:09.381Z",
+    "updatedAt": "2026-06-10T05:07:09.381Z"
+  }
+]

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import Navbar from "../pages/Navbar.jsx";
 import axios from "axios";
+import { API_BASE_URL } from "../api.js";
 import "../css/Reels.css";
 
 const CATEGORIES = ["All", "Food & Drink", "Fitness", "Beauty", "Technology", "Lifestyle", "Travel"];
@@ -166,7 +167,7 @@ function Reels() {
     async function fetchReels() {
       try {
         setLoading(true);
-        const res = await axios.get("http://localhost:1000/api/reels", {
+        const res = await axios.get(`${API_BASE_URL}/api/reels`, {
           withCredentials: true,
         });
         setReels(res.data);

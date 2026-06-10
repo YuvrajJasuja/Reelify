@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from "react";
 import "../css/Upload.css";
 import Navbar from "../pages/Navbar";
 import axios from "axios"; // ✅ added
+import { API_BASE_URL } from "../api.js";
 
 export default function Upload() {
   const [dragActive, setDragActive] = useState(false);
@@ -68,7 +69,7 @@ export default function Upload() {
       formData.append("hashtags", form.hashtags);
 
       const res = await axios.post(
-        "http://localhost:1000/api/reel/upload", // 🔥 backend route
+        `${API_BASE_URL}/api/reel/upload`, // 🔥 backend route
         formData,
         {
           withCredentials: true,

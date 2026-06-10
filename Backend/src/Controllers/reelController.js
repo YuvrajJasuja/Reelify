@@ -9,7 +9,7 @@ async function createReel(req, res) {
             return res.status(400).json({ message: "Video file is required" });
         }
 
-        const videoUrl = `http://localhost:1000/uploads/${req.file.filename}`;
+        const videoUrl = `/uploads/${req.file.filename}`;
 
         const newReel = new reelModel({
             user: req.user._id,
@@ -31,7 +31,18 @@ async function createReel(req, res) {
 async function getReels(req, res) {
     try {
         const reels = await reelModel.find().populate("user", "fullName email");
-        res.status(200).json(reels);
+        const protocol = req.protocol;
+        const host = req.get('host');
+        
+        const mappedReels = reels.map(r => {
+            const doc = r.toObject ? r.toObject() : { ...r };
+            if (doc.reel && doc.reel.startsWith('/')) {
+                doc.reel = `${protocol}://${host}${doc.reel}`;
+            }
+            return doc;
+        });
+
+        res.status(200).json(mappedReels);
     } catch (error) {
         console.error("Error fetching reels:", error);
         res.status(500).json({ message: "Failed to fetch reels" });

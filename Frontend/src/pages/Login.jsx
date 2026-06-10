@@ -3,6 +3,7 @@ import "../css/Login.css";
 import Navbar from "../pages/Navbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_BASE_URL } from "../api.js";
 /* ── SVG Icons ── */
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24">
@@ -43,7 +44,7 @@ function SignInForm() {
 
     try {
       const response = await axios.post(
-        "http://localhost:1000/api/user/login",
+        `${API_BASE_URL}/api/user/login`,
         { email, password },
         { withCredentials: true }
       );
@@ -110,7 +111,7 @@ function SignUpForm() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:1000/api/user/createUser",
+        `${API_BASE_URL}/api/user/createUser`,
         { fullName,email, password },
         { withCredentials: true }
       );
