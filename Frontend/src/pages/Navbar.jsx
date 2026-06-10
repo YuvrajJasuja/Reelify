@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import "../css/Navbar.css";
 
 
@@ -17,6 +18,43 @@ const ReelsIcon = ({ filled }) => filled ? (
 ) : (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="2" width="20" height="20" rx="3"/><polygon points="10,8 16,12 10,16"/>
+  </svg>
+);
+
+const LoginIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M15 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"/>
+    <polyline points="10 17 15 12 10 7"/>
+    <line x1="15" y1="12" x2="3" y2="12"/>
+  </svg>
+);
+
+const SignUpIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+    <circle cx="8.5" cy="7" r="4"/>
+    <line x1="20" y1="8" x2="20" y2="14"/>
+    <line x1="17" y1="11" x2="23" y2="11"/>
+  </svg>
+);
+
+const MyUploadsIcon = ({ filled }) => filled ? (
+  <svg viewBox="0 0 24 24" fill="currentColor">
+    <path d="M4 6H2v14a2 2 0 0 0 2 2h14v-2H4V6zm16-4H8a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm-8 12.5v-9l6 4.5-6 4.5z"/>
+  </svg>
+) : (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="8" y="2" width="12" height="14" rx="2" ry="2"/>
+    <path d="M4 6v14a2 2 0 0 0 2 2h12"/>
+    <polygon points="12 7 17 10 12 13"/>
+  </svg>
+);
+
+const LogoutIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+    <polyline points="16 17 21 12 16 7"/>
+    <line x1="21" y1="12" x2="9" y2="12"/>
   </svg>
 );
 
@@ -83,15 +121,12 @@ const LogoIcon = () => (
 const NAV_ITEMS = [
   { id: "home",          label: "Home",          icon: HomeIcon,    badge: null ,path:"/"},
   { id: "reels",         label: "Reels",         icon: ReelsIcon,   badge: null ,path:"/Reels"},
-  // { id: "explore",       label: "Explore",       icon: ExploreIcon, badge: null },
-  // { id: "messages",      label: "Messages",      icon: MessageIcon, badge: 5    },
-  // { id: "notifications", label: "Notifications", icon: NotifIcon,   badge: null, dot: true },
-  // { id: "upload",        label: "Upload",        icon: UploadIcon,  badge: null },
 ];
 
 /* ── Main Component ── */
 export default function Navbar({ onNavigate }) {
   const [expanded, setExpanded] = useState(false);
+  const { user, logout } = useAuth();
 
   return (
     <nav className={`nb${expanded ? " nb--open" : ""}`}>
@@ -136,32 +171,115 @@ export default function Navbar({ onNavigate }) {
           );
         })}
 
-        {/* Profile */}
-        <li className="nb__profile" style={{ "--i": NAV_ITEMS.length }}>
-          <NavLink
-            to="/Login"
-            className={({ isActive }) =>
-              `nb__item ${isActive ? "nb__item--active" : ""}`
-            }
-          >
-            {({ isActive }) => (
-              <>
-                <span className="nb__icon-wrap nb__avatar-wrap">
-                  <img
-                    src="https://i.pravatar.cc/40?img=12"
-                    alt="Profile"
-                    className={`nb__avatar ${
-                      isActive ? "nb__avatar--active" : ""
-                    }`}
-                  />
-                </span>
+        {/* Dynamic My Uploads link (only if logged in) */}
+        {user && (
+          <li style={{ "--i": NAV_ITEMS.length }}>
+            <NavLink
+              to="/my-uploads"
+              className={({ isActive }) =>
+                `nb__item ${isActive ? "nb__item--active" : ""}`
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <span className="nb__icon-wrap">
+                    <MyUploadsIcon filled={isActive} />
+                  </span>
+                  <span className="nb__label">My Uploads</span>
+                  {isActive && <span className="nb__active-bar" />}
+                </>
+              )}
+            </NavLink>
+          </li>
+        )}
 
-                <span className="nb__label">Profile</span>
-                {isActive && <span className="nb__active-bar" />}
-              </>
-            )}
-          </NavLink>
-        </li>
+        {/* Dynamic footer links based on authentication state */}
+        {!user ? (
+          <>
+            {/* Login */}
+            <li style={{ "--i": NAV_ITEMS.length + 1 }} className="nb__profile">
+              <NavLink
+                to="/login"
+                className={({ isActive }) =>
+                  `nb__item ${isActive ? "nb__item--active" : ""}`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <span className="nb__icon-wrap">
+                      <LoginIcon />
+                    </span>
+                    <span className="nb__label">Login</span>
+                    {isActive && <span className="nb__active-bar" />}
+                  </>
+                )}
+              </NavLink>
+            </li>
+
+            {/* Sign Up */}
+            <li style={{ "--i": NAV_ITEMS.length + 2 }}>
+              <NavLink
+                to="/login?signup=true"
+                className={({ isActive }) =>
+                  `nb__item ${isActive ? "nb__item--active" : ""}`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <span className="nb__icon-wrap">
+                      <SignUpIcon />
+                    </span>
+                    <span className="nb__label">Sign Up</span>
+                    {isActive && <span className="nb__active-bar" />}
+                  </>
+                )}
+              </NavLink>
+            </li>
+          </>
+        ) : (
+          <>
+            {/* Profile */}
+            <li style={{ "--i": NAV_ITEMS.length + 1 }} className="nb__profile">
+              <NavLink
+                to="/profile"
+                className={({ isActive }) =>
+                  `nb__item ${isActive ? "nb__item--active" : ""}`
+                }
+              >
+                {({ isActive }) => (
+                  <>
+                    <span className="nb__icon-wrap nb__avatar-wrap">
+                      <img
+                        src="https://i.pravatar.cc/40?img=12"
+                        alt="Profile"
+                        className={`nb__avatar ${
+                          isActive ? "nb__avatar--active" : ""
+                        }`}
+                      />
+                    </span>
+
+                    <span className="nb__label">Profile</span>
+                    {isActive && <span className="nb__active-bar" />}
+                  </>
+                )}
+              </NavLink>
+            </li>
+
+            {/* Logout */}
+            <li style={{ "--i": NAV_ITEMS.length + 2 }}>
+              <div
+                className="nb__item"
+                onClick={logout}
+                style={{ cursor: "pointer" }}
+              >
+                <span className="nb__icon-wrap">
+                  <LogoutIcon />
+                </span>
+                <span className="nb__label">Logout</span>
+              </div>
+            </li>
+          </>
+        )}
       </ul>
     </nav>
   );

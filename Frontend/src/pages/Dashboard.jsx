@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "../css/Dashboard.css";
 import Navbar from "../pages/Navbar.jsx";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 /* ── Mock Data ── */
 const STATS = [
   { id: "views",     label: "Total Views",     value: "2.4M",  change: "+18.2%", up: true,  icon: "👁" },
@@ -102,6 +104,8 @@ function ReelRow({ reel, index }) {
 
 /* ── Dashboard ── */
 export default function Dashboard() {
+  const navigate = useNavigate();
+  const { user } = useAuth();
   
   const [activeCategory, setActiveCategory] = useState("All");
   const [searchQuery, setSearchQuery]       = useState("");
@@ -110,6 +114,19 @@ export default function Dashboard() {
     (activeCategory === "All" || TRENDING.find(t => t.business === r.business)?.category === activeCategory) &&
     (searchQuery === "" || r.title.toLowerCase().includes(searchQuery.toLowerCase()) || r.business.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  const handleUploadClick = () => {
+    if (user) {
+      navigate("/upload");
+    } else {
+      navigate("/login", {
+        state: {
+          from: "/upload",
+          message: "Please login first to upload reels."
+        }
+      });
+    }
+  };
 
   return (<div>
     <Navbar/>
@@ -132,7 +149,7 @@ export default function Dashboard() {
               className="db__search-input"
             />
           </div>
-          <button className="db__upload-btn">
+          <button className="db__upload-btn" onClick={handleUploadClick}>
             <span>+</span> Upload Reel
           </button>
         </div>

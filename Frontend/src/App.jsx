@@ -1,20 +1,57 @@
-import { BrowserRouter,Routes,Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
+import PublicRoute from "./components/PublicRoute";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
 import Reels from "./pages/Reels";
-import Upload from "./pages/upload";
+import Upload from "./pages/Upload";
+import Profile from "./pages/Profile";
+import MyUploads from "./pages/MyUploads";
 
-function App(){
-    return(
-        <BrowserRouter>
+function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
         <Routes>
-            <Route path="/" element={<Dashboard/>}/>
-            <Route path="/login" element={<Login/>}/>
-            <Route path="/Reels" element={<Reels/>}/>
-            <Route path="/upload" element={<Upload/>}/>
+          <Route path="/" element={<Dashboard />} />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route path="/Reels" element={<Reels />} />
+          <Route
+            path="/upload"
+            element={
+              <ProtectedRoute>
+                <Upload />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/my-uploads"
+            element={
+              <ProtectedRoute>
+                <MyUploads />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
-        </BrowserRouter>
-    )
+      </BrowserRouter>
+    </AuthProvider>
+  );
 }
 
 export default App;

@@ -6,5 +6,6 @@ const router=express.Router();
 router.post('/user/createUser', userController.createUser)
 router.post('/user/login', userController.loginUser)
 router.get('/user/logout',authUserMiddleware,userController.logoutUser)
+router.get('/user/me', authUserMiddleware, userController.getMe)
 
 module.exports=router;

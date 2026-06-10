@@ -81,8 +81,22 @@ function logoutUser(req, res) {
     });
 }
 
+async function getMe(req, res) {
+    if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+    }
+    res.status(200).json({
+        user: {
+            _id: req.user._id,
+            email: req.user.email,
+            fullName: req.user.fullName
+        }
+    });
+}
+
 module.exports={
     createUser,
     loginUser,
-    logoutUser
+    logoutUser,
+    getMe
 }
