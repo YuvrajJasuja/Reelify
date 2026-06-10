@@ -68,7 +68,7 @@ export default function Upload() {
       formData.append("hashtags", form.hashtags);
 
       const res = await axios.post(
-        "http://localhost:1000/reel/upload", // 🔥 backend route
+        "http://localhost:1000/api/reel/upload", // 🔥 backend route
         formData,
         {
           withCredentials: true,

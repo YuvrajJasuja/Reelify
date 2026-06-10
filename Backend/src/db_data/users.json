@@ -1,0 +1,10 @@
+[
+  {
+    "_id": "demouserid12345",
+    "fullName": "Demo Business",
+    "email": "demo@reelify.com",
+    "password": "hashedpassworddummy",
+    "createdAt": "2026-06-10T05:02:42.587Z",
+    "updatedAt": "2026-06-10T05:02:42.588Z"
+  }
+]

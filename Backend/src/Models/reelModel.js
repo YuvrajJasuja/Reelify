@@ -6,12 +6,12 @@ const reelSchema = new mongoose.Schema({
     ref: "User",
     required: true
   },
-  businessName: String,
-  title: String,
+  businessName: { type: String, required: true },
+  category: { type: String, required: true },
   description: String,
-  hashtags: String,
+  reel: { type: String, required: true },
   bussinessUrl: String,
-  createdAt: {
+  uploadedAt: {
     type: Date,
     default: Date.now
   }

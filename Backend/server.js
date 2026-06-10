@@ -1,10 +1,13 @@
+require('dotenv').config();
+require('./src/dbFallback');
+
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 const userRoute = require('./src/Routes/userRoute');
 const reelRoute = require('./src/Routes/reelRoute');
 const connectDB = require('./src/db');
 const cors = require('cors');
-require('dotenv').config();
 
 const app = express();
 const corsOptions = {
@@ -16,6 +19,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));//form data
 app.use(cookieParser());
+
+// Serve static uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const port = 1000;
 
@@ -33,3 +39,4 @@ app.use('/api', reelRoute);
 app.listen(port, () => {
     console.log(`✓ Server started at http://localhost:${port}`);
 });
+
