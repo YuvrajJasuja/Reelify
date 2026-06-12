@@ -1,0 +1,222 @@
+/* ── Profile page styling ── */
+
+.pf-card {
+  background: var(--db-surface);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius);
+  padding: 30px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.22s, box-shadow 0.22s;
+  animation: db-fade-up 0.5s ease forwards;
+}
+
+.pf-card:hover {
+  border-color: rgba(96, 69, 226, 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.pf-card__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--db-border);
+  padding-bottom: 12px;
+}
+
+.pf-card__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pf-card__btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--db-border);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pf-card__btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.pf-card__btn--save {
+  background: linear-gradient(135deg, var(--db-accent), var(--db-accent-2));
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(96, 69, 226, 0.3);
+}
+
+.pf-card__btn--save:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(96, 69, 226, 0.45);
+}
+
+.pf-card__btn--cancel {
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444;
+}
+
+.pf-card__btn--cancel:hover {
+  background: rgba(239, 68, 68, 0.08);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+/* ── Content forms & View states ── */
+.pf-content {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--db-text);
+  white-space: pre-wrap;
+}
+
+.pf-empty {
+  font-style: italic;
+  color: var(--db-text-soft);
+  font-size: 14.5px;
+}
+
+.pf-textarea {
+  width: 100%;
+  min-height: 100px;
+  background: var(--db-surface-2);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-sm);
+  padding: 12px 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14.5px;
+  color: #fff;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.22s, box-shadow 0.22s;
+}
+
+.pf-textarea:focus {
+  border-color: var(--db-accent);
+  box-shadow: 0 0 0 3px rgba(96, 69, 226, 0.15);
+}
+
+/* ── Contact grid ── */
+.pf-contact-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pf-contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 14.5px;
+}
+
+.pf-contact-label {
+  font-weight: 500;
+  color: var(--db-text-soft);
+  width: 90px;
+  flex-shrink: 0;
+}
+
+.pf-contact-val {
+  color: #fff;
+  word-break: break-all;
+}
+
+.pf-contact-val a {
+  color: #a855f7;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.pf-contact-val a:hover {
+  text-decoration: underline;
+}
+
+.pf-input-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.pf-input-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pf-input-field label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--db-text-soft);
+  text-transform: uppercase;
+}
+
+.pf-input {
+  width: 100%;
+  background: var(--db-surface-2);
+  border: 1px solid var(--db-border);
+  border-radius: var(--db-radius-sm);
+  padding: 10px 14px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.22s, box-shadow 0.22s;
+}
+
+.pf-input:focus {
+  border-color: var(--db-accent);
+  box-shadow: 0 0 0 3px rgba(96, 69, 226, 0.15);
+}
+
+/* ── Success banner ── */
+.pf-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #111018;
+  border-left: 4px solid var(--db-green);
+  border-top: 1px solid var(--db-border);
+  border-right: 1px solid var(--db-border);
+  border-bottom: 1px solid var(--db-border);
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  font-weight: 500;
+  font-size: 14.5px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 10000;
+  animation: toast-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes toast-in {
+  from { transform: translateY(20px) scale(0.9); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}

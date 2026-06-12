@@ -334,3 +334,101 @@
 
   .nb__active-bar { display: none; }
 }
+
+/* ── Logout Modal ── */
+.nb-logout-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 9, 16, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: modalFadeIn 0.22s ease-out;
+}
+
+.nb-logout-modal {
+  background: #111018;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 32px;
+  width: 90%;
+  max-width: 420px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  animation: modalScaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nb-logout-modal__title {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.nb-logout-modal__text {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 26px;
+  font-family: 'Outfit', sans-serif;
+}
+
+.nb-logout-modal__actions {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+}
+
+.nb-logout-modal__btn {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.18s ease, background 0.18s ease;
+  outline: none;
+}
+
+.nb-logout-modal__btn:active {
+  transform: scale(0.95);
+}
+
+.nb-logout-modal__btn--yes {
+  background: linear-gradient(135deg, #6045e2, #a855f7);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(96, 69, 226, 0.35);
+}
+
+.nb-logout-modal__btn--yes:hover {
+  background: linear-gradient(135deg, #7158e8, #b562ff);
+  box-shadow: 0 6px 20px rgba(96, 69, 226, 0.5);
+  transform: translateY(-1px);
+}
+
+.nb-logout-modal__btn--no {
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.nb-logout-modal__btn--no:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalScaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+

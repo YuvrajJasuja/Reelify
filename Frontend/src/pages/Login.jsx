@@ -231,7 +231,7 @@ function SignUpForm({ onSuccess }) {
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, user } = useAuth();
 
   // Read state or query parameter for signup mode
   const queryParams = new URLSearchParams(location.search);
@@ -242,6 +242,13 @@ export default function Login() {
   useEffect(() => {
     setIsActive(isSignUpDefault);
   }, [location.search, isSignUpDefault]);
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user) {
+      navigate(location.state?.from || "/", { replace: true });
+    }
+  }, [user, navigate, location.state]);
 
   // Destination path and optional flash messages
   const from = location.state?.from || "/";

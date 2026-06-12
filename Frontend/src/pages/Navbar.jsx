@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../css/Navbar.css";
 
@@ -23,9 +23,8 @@ const ReelsIcon = ({ filled }) => filled ? (
 
 const LoginIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M15 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"/>
-    <polyline points="10 17 15 12 10 7"/>
-    <line x1="15" y1="12" x2="3" y2="12"/>
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+    <circle cx="12" cy="7" r="4"/>
   </svg>
 );
 
@@ -126,10 +125,19 @@ const NAV_ITEMS = [
 /* ── Main Component ── */
 export default function Navbar({ onNavigate }) {
   const [expanded, setExpanded] = useState(false);
-  const { user, logout } = useAuth();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const { user, logout, loading } = useAuth();
+  const navigate = useNavigate();
+
+  const handleConfirmLogout = async () => {
+    await logout();
+    setShowLogoutModal(false);
+    navigate("/");
+  };
 
   return (
-    <nav className={`nb${expanded ? " nb--open" : ""}`}>
+    <>
+      <nav className={`nb${expanded ? " nb--open" : ""}`}>
 
       {/* Logo */}
       <div className="nb__logo" onClick={() => setExpanded(!expanded)}>
@@ -172,7 +180,7 @@ export default function Navbar({ onNavigate }) {
         })}
 
         {/* Dynamic My Uploads link (only if logged in) */}
-        {user && (
+        {!loading && user && (
           <li style={{ "--i": NAV_ITEMS.length }}>
             <NavLink
               to="/my-uploads"
@@ -194,7 +202,7 @@ export default function Navbar({ onNavigate }) {
         )}
 
         {/* Dynamic footer links based on authentication state */}
-        {!user ? (
+        {!loading && !user ? (
           <>
             {/* Login */}
             <li style={{ "--i": NAV_ITEMS.length + 1 }} className="nb__profile">
@@ -215,28 +223,8 @@ export default function Navbar({ onNavigate }) {
                 )}
               </NavLink>
             </li>
-
-            {/* Sign Up */}
-            <li style={{ "--i": NAV_ITEMS.length + 2 }}>
-              <NavLink
-                to="/login?signup=true"
-                className={({ isActive }) =>
-                  `nb__item ${isActive ? "nb__item--active" : ""}`
-                }
-              >
-                {({ isActive }) => (
-                  <>
-                    <span className="nb__icon-wrap">
-                      <SignUpIcon />
-                    </span>
-                    <span className="nb__label">Sign Up</span>
-                    {isActive && <span className="nb__active-bar" />}
-                  </>
-                )}
-              </NavLink>
-            </li>
           </>
-        ) : (
+        ) : !loading && user ? (
           <>
             {/* Profile */}
             <li style={{ "--i": NAV_ITEMS.length + 1 }} className="nb__profile">
@@ -269,7 +257,7 @@ export default function Navbar({ onNavigate }) {
             <li style={{ "--i": NAV_ITEMS.length + 2 }}>
               <div
                 className="nb__item"
-                onClick={logout}
+                onClick={() => setShowLogoutModal(true)}
                 style={{ cursor: "pointer" }}
               >
                 <span className="nb__icon-wrap">
@@ -279,9 +267,38 @@ export default function Navbar({ onNavigate }) {
               </div>
             </li>
           </>
-        )}
+        ) : null}
       </ul>
     </nav>
+
+    {/* Logout Confirmation Modal */}
+    {showLogoutModal && (
+      <div className="nb-logout-modal-overlay">
+        <div className="nb-logout-modal">
+          <h3 className="nb-logout-modal__title">
+            Are you sure you want to logout?
+          </h3>
+          <p className="nb-logout-modal__text">
+            You will need to sign back in to access your uploads and profile features.
+          </p>
+          <div className="nb-logout-modal__actions">
+            <button 
+              className="nb-logout-modal__btn nb-logout-modal__btn--yes"
+              onClick={handleConfirmLogout}
+            >
+              Yes
+            </button>
+            <button 
+              className="nb-logout-modal__btn nb-logout-modal__btn--no"
+              onClick={() => setShowLogoutModal(false)}
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }
       {/* Bottom links */}
