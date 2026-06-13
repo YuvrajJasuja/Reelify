@@ -8,5 +8,6 @@ router.post('/reel/upload', authUserMiddleware, upload.single('video'), reelCont
 router.get('/reels', reelController.getReels);
 router.get('/reel/:reelId', reelController.getReelById);
 router.get('/reels/user/:userId', reelController.getUserReels);
+router.delete('/reel/:reelId', authUserMiddleware, reelController.deleteReel);
 
 module.exports=router;

@@ -31,6 +31,10 @@ const reelSchema = new mongoose.Schema({
       "Travel"
     ]
   },
+  fileId: {
+    type: String,
+    default: ""
+  },
   createdAt: {
     type: Date,
     default: Date.now

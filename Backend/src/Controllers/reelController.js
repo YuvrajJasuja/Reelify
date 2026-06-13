@@ -42,6 +42,7 @@ async function createReel(req, res) {
 
         const newReel = new reelModel({
             videoUrl: uploadResponse.url,
+            fileId: uploadResponse.fileId,
             uploadedBy: req.user._id,
             uploaderName: req.user.fullName,
             caption: caption,
@@ -131,4 +132,53 @@ async function getUserReels(req, res) {
     }
 }
 
-module.exports = { createReel, getReels, getReelById, getUserReels };
+// Delete a reel
+async function deleteReel(req, res) {
+    try {
+        const { reelId } = req.params;
+        const reel = await reelModel.findById(reelId);
+        
+        if (!reel) {
+            return res.status(404).json({ message: "Reel not found" });
+        }
+
+        // Verify ownership
+        if (reel.uploadedBy.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: "You are not authorized to delete this reel" });
+        }
+
+        // Delete file from ImageKit
+        if (reel.videoUrl && reel.videoUrl.includes("imagekit.io")) {
+            try {
+                if (reel.fileId) {
+                    await imagekit.deleteFile(reel.fileId);
+                    console.log(`🧹 Deleted file ${reel.fileId} from ImageKit`);
+                } else {
+                    // Try to search by name in case fileId wasn't stored (legacy reels)
+                    const parts = reel.videoUrl.split("/");
+                    const filename = parts[parts.length - 1];
+                    const files = await imagekit.listFiles({
+                        searchQuery: `name = "${filename}"`
+                    });
+                    if (files && files.length > 0) {
+                        await imagekit.deleteFile(files[0].fileId);
+                        console.log(`🧹 Found and deleted file ${files[0].fileId} from ImageKit`);
+                    }
+                }
+            } catch (ikError) {
+                console.error("Error deleting file from ImageKit during reel deletion:", ikError);
+                // We'll continue and delete the DB record anyway so the UI stays in sync
+            }
+        }
+
+        // Delete from database
+        await reelModel.deleteOne({ _id: reelId });
+
+        res.status(200).json({ message: "Reel deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting reel:", error);
+        res.status(500).json({ message: "Failed to delete reel" });
+    }
+}
+
+module.exports = { createReel, getReels, getReelById, getUserReels, deleteReel };
