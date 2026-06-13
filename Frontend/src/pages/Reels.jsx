@@ -4,8 +4,6 @@ import axios from "axios";
 import { API_BASE_URL } from "../api.js";
 import "../css/Reels.css";
 
-const CATEGORIES = ["All", "Food & Drink", "Fitness", "Beauty", "Technology", "Lifestyle", "Travel"];
-
 function ReelCard({ reel, isMuted, toggleMute }) {
   const cardRef = useRef(null);
   const videoRef = useRef(null);
@@ -66,15 +64,16 @@ function ReelCard({ reel, isMuted, toggleMute }) {
   };
 
   const handleShare = () => {
-    navigator.clipboard.writeText(reel.reel);
+    navigator.clipboard.writeText(reel.videoUrl);
     setShared(true);
     setTimeout(() => setShared(false), 2000);
   };
 
-  // Get first letter of business name for avatar placeholder if no user avatar exists
   const getAvatarUrl = () => {
-    const index = Math.abs(reel.businessName.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)) % 70;
-    return `https://i.pravatar.cc/100?img=${index}`;
+    if (reel.uploadedBy && reel.uploadedBy.profilePicture) {
+      return reel.uploadedBy.profilePicture;
+    }
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(reel.uploaderName)}&background=6045e2&color=fff`;
   };
 
   return (
@@ -82,7 +81,7 @@ function ReelCard({ reel, isMuted, toggleMute }) {
       {/* Video element */}
       <video
         ref={videoRef}
-        src={reel.reel}
+        src={reel.videoUrl}
         className="reel-video"
         loop
         playsInline
@@ -133,25 +132,31 @@ function ReelCard({ reel, isMuted, toggleMute }) {
       {/* Bottom Info Overlay */}
       <div className="reel-info-overlay">
         <div className="reel-info-header">
-          <img src={getAvatarUrl()} alt="Business Avatar" className="reel-avatar" />
-          <span className="reel-biz-name">
-            {reel.businessName}
-            <span className="reel-verified">✓</span>
-          </span>
-          <span className="reel-category">{reel.category}</span>
+          <img src={getAvatarUrl()} alt="Uploader Avatar" className="reel-avatar" />
+          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+            <span className="reel-biz-name">
+              {reel.uploaderName}
+              <span className="reel-verified">✓</span>
+            </span>
+            <span className="reel-meta-row" style={{ fontSize: "11px", color: "rgba(255,255,255,0.6)", display: "flex", alignItems: "center", gap: "6px" }}>
+              <span className="reel-cat-badge-feed" style={{
+                background: "rgba(96, 69, 226, 0.25)",
+                color: "#c084fc",
+                padding: "1px 6px",
+                borderRadius: "4px",
+                fontSize: "10px",
+                fontWeight: "600"
+              }}>
+                {reel.category}
+              </span>
+              •
+              <span>
+                {new Date(reel.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+              </span>
+            </span>
+          </div>
         </div>
-        <p className="reel-description">{reel.description}</p>
-        
-        {reel.bussinessUrl && (
-          <a
-            href={reel.bussinessUrl.startsWith("http") ? reel.bussinessUrl : `https://${reel.bussinessUrl}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="reel-link-btn"
-          >
-            🌐 Visit Website
-          </a>
-        )}
+        <p className="reel-description">{reel.caption}</p>
       </div>
     </div>
   );
@@ -161,7 +166,6 @@ function Reels() {
   const [reels, setReels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
-  const [activeCategory, setActiveCategory] = useState("All");
 
   useEffect(() => {
     async function fetchReels() {
@@ -184,10 +188,6 @@ function Reels() {
     setIsMuted((prev) => !prev);
   };
 
-  const filteredReels = reels.filter(
-    (reel) => activeCategory === "All" || reel.category === activeCategory
-  );
-
   return (
     <>
       <Navbar />
@@ -196,28 +196,15 @@ function Reels() {
         <div className="reels-bg-orb reels-bg-orb-1" />
         <div className="reels-bg-orb reels-bg-orb-2" />
 
-        {/* Category filters */}
-        <div className="reels-filter-bar">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              className={`reels-filter-btn ${activeCategory === cat ? "reels-filter-btn--active" : ""}`}
-              onClick={() => setActiveCategory(cat)}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-
         {/* Feed container */}
         {loading ? (
           <div className="reels-loading">
             <div className="reels-loading-spinner" />
             <p>Curating your feed...</p>
           </div>
-        ) : filteredReels.length > 0 ? (
+        ) : reels.length > 0 ? (
           <div className="reels-feed">
-            {filteredReels.map((reel) => (
+            {reels.map((reel) => (
               <ReelCard
                 key={reel._id}
                 reel={reel}
@@ -229,8 +216,8 @@ function Reels() {
         ) : (
           <div className="reels-empty">
             <span className="reels-empty-icon">🎬</span>
-            <h2>No Reels Found</h2>
-            <p>Be the first to upload a reel in this category!</p>
+            <h2>No reels uploaded yet.</h2>
+            <p>Be the first to upload a reel!</p>
           </div>
         )}
       </div>

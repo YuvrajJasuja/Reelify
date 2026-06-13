@@ -595,6 +595,17 @@ body {
 
   .db__stats { grid-template-columns: repeat(2, 1fr); gap: 12px; }
   .db-stat__value { font-size: 22px; }
+
+  .db__cats {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .db__cats::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 @media (max-width: 480px) {

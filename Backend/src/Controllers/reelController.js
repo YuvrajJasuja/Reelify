@@ -1,24 +1,53 @@
+const imagekit = require('../storage');
+const { v4: uuidv4 } = require('uuid');
+const path = require('path');
 const reelModel = require("../Models/reelModel");
 
 // Create a new reel
 async function createReel(req, res) {
     try {
-        const { businessName, category, description, bussinessUrl } = req.body;
-        
         if (!req.file) {
             return res.status(400).json({ message: "Video file is required" });
         }
 
-        const videoUrl = `/uploads/${req.file.filename}`;
+        const caption = req.body.caption || "";
+        const category = req.body.category;
+
+        if (!category) {
+            return res.status(400).json({ message: "Category is required" });
+        }
+
+        const validCategories = [
+            "Food & Drink",
+            "Fitness",
+            "Beauty",
+            "Technology",
+            "Lifestyle",
+            "Fashion",
+            "Travel"
+        ];
+        if (!validCategories.includes(category)) {
+            return res.status(400).json({ message: "Invalid category selected" });
+        }
+        
+        // Generate unique filename using UUID
+        const uniqueFileName = `${uuidv4()}${path.extname(req.file.originalname)}`;
+
+        // Upload to ImageKit
+        const uploadResponse = await imagekit.upload({
+            file: req.file.buffer, // buffer from memory storage
+            fileName: uniqueFileName,
+            folder: '/reels'
+        });
 
         const newReel = new reelModel({
-            user: req.user._id,
-            businessName,
-            category,
-            description,
-            reel: videoUrl,
-            bussinessUrl
+            videoUrl: uploadResponse.url,
+            uploadedBy: req.user._id,
+            uploaderName: req.user.fullName,
+            caption: caption,
+            category: category
         });
+
         await newReel.save();
         res.status(201).json({ message: "Reel created successfully", reel: newReel });
     } catch (error) {
@@ -30,14 +59,19 @@ async function createReel(req, res) {
 // Get all reels
 async function getReels(req, res) {
     try {
-        const reels = await reelModel.find().populate("user", "fullName email");
+        // Fetch sorted by newest first, populate uploader info
+        const reels = await reelModel.find()
+            .sort({ createdAt: -1 })
+            .populate("uploadedBy", "fullName email");
+            
         const protocol = req.protocol;
         const host = req.get('host');
         
         const mappedReels = reels.map(r => {
             const doc = r.toObject ? r.toObject() : { ...r };
-            if (doc.reel && doc.reel.startsWith('/')) {
-                doc.reel = `${protocol}://${host}${doc.reel}`;
+            // Format videoUrl for local seed data if a relative path is used
+            if (doc.videoUrl && doc.videoUrl.startsWith('/')) {
+                doc.videoUrl = `${protocol}://${host}${doc.videoUrl}`;
             }
             return doc;
         });

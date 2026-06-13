@@ -1,17 +1,37 @@
 const mongoose = require("mongoose");
 
 const reelSchema = new mongoose.Schema({
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
+  videoUrl: {
+    type: String,
     required: true
   },
-  businessName: { type: String, required: true },
-  category: { type: String, required: true },
-  description: String,
-  reel: { type: String, required: true },
-  bussinessUrl: String,
-  uploadedAt: {
+  uploadedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user", // References userModel registered as "user"
+    required: true
+  },
+  uploaderName: {
+    type: String,
+    required: true
+  },
+  caption: {
+    type: String,
+    default: ""
+  },
+  category: {
+    type: String,
+    required: true,
+    enum: [
+      "Food & Drink",
+      "Fitness",
+      "Beauty",
+      "Technology",
+      "Lifestyle",
+      "Fashion",
+      "Travel"
+    ]
+  },
+  createdAt: {
     type: Date,
     default: Date.now
   }

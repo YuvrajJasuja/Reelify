@@ -1,23 +1,21 @@
 import { useState, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import "../css/Upload.css";
 import Navbar from "../pages/Navbar";
-import axios from "axios"; // ✅ added
+import axios from "axios";
 import { API_BASE_URL } from "../api.js";
 
 export default function Upload() {
+  const navigate = useNavigate();
   const [dragActive, setDragActive] = useState(false);
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploaded, setUploaded] = useState(false);
-
-  const [form, setForm] = useState({
-    businessName: "",
-    title: "",
-    description: "",
-    hashtags: "",
-  });
+  const [caption, setCaption] = useState("");
+  const [category, setCategory] = useState("");
+  const [validationError, setValidationError] = useState("");
 
   const inputRef = useRef(null);
 
@@ -49,27 +47,25 @@ export default function Upload() {
 
   const handleFileChange = (e) => processFile(e.target.files[0]);
 
-  const handleFormChange = (e) =>
-    setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-
-  // ✅ UPDATED: REAL UPLOAD FUNCTION
   const handleUpload = async () => {
     if (!file) return;
+
+    if (!category) {
+      setValidationError("Please select a category for your reel.");
+      return;
+    }
 
     try {
       setUploading(true);
       setUploadProgress(0);
 
       const formData = new FormData();
-
       formData.append("video", file);
-      formData.append("businessName", form.businessName);
-      formData.append("title", form.title);
-      formData.append("description", form.description);
-      formData.append("hashtags", form.hashtags);
+      formData.append("caption", caption);
+      formData.append("category", category);
 
       const res = await axios.post(
-        `${API_BASE_URL}/api/reel/upload`, // 🔥 backend route
+        `${API_BASE_URL}/api/reel/upload`,
         formData,
         {
           withCredentials: true,
@@ -86,13 +82,14 @@ export default function Upload() {
       );
 
       console.log("Upload success:", res.data);
-
       setUploading(false);
       setUploaded(true);
-
+      
+      // Instantly show reel in feed by navigating to /Reels page (react router client-side navigation)
+      navigate("/Reels");
     } catch (err) {
       console.error("Upload failed:", err.response?.data || err.message);
-      alert("Upload failed");
+      alert(err.response?.data?.message || "Upload failed");
       setUploading(false);
     }
   };
@@ -103,7 +100,9 @@ export default function Upload() {
     setUploading(false);
     setUploadProgress(0);
     setUploaded(false);
-    setForm({ businessName: "", title: "", description: "", hashtags: "" });
+    setCaption("");
+    setCategory("");
+    setValidationError("");
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -127,56 +126,51 @@ export default function Upload() {
             <h1 className="card-heading">
               Share your<br />reel with us
             </h1>
-            <p className="card-sub">Fill in the details and drop your video below.</p>
+            <p className="card-sub">Write a caption and select your video file to publish.</p>
 
             <div className="field">
-              <label className="field-label">BUSINESS NAME</label>
-              <input
-                className="field-input"
-                type="text"
-                name="businessName"
-                value={form.businessName}
-                onChange={handleFormChange}
-                placeholder="e.g. Horizon Studios"
-              />
-            </div>
-
-            <div className="field">
-              <label className="field-label">TITLE</label>
-              <input
-                className="field-input"
-                type="text"
-                name="title"
-                value={form.title}
-                onChange={handleFormChange}
-                placeholder="Give your reel a title"
-                maxLength={80}
-              />
-            </div>
-
-            <div className="field">
-              <label className="field-label">DESCRIPTION</label>
+              <label className="field-label">CAPTION</label>
               <textarea
                 className="field-input field-textarea"
-                name="description"
-                value={form.description}
-                onChange={handleFormChange}
-                placeholder="What's this reel about?"
-                rows={3}
+                name="caption"
+                value={caption}
+                onChange={(e) => setCaption(e.target.value)}
+                placeholder="What's this reel about? Add tags #fun #creative"
+                rows={4}
                 maxLength={300}
               />
             </div>
 
             <div className="field">
-              <label className="field-label">HASHTAGS</label>
-              <input
-                className="field-input"
-                type="text"
-                name="hashtags"
-                value={form.hashtags}
-                onChange={handleFormChange}
-                placeholder="#travel  #cinematic  #brand"
-              />
+              <label className="field-label">CATEGORY</label>
+              <div className="category-select-pills">
+                {[
+                  "Food & Drink",
+                  "Fitness",
+                  "Beauty",
+                  "Technology",
+                  "Lifestyle",
+                  "Fashion",
+                  "Travel"
+                ].map((cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    className={`category-pill-btn ${category === cat ? "active" : ""}`}
+                    onClick={() => {
+                      setCategory(cat);
+                      setValidationError("");
+                    }}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+              {validationError && (
+                <span className="field-error" style={{ color: "#ef4444", fontSize: "12px", marginTop: "4px", fontWeight: "500" }}>
+                  {validationError}
+                </span>
+              )}
             </div>
 
             <div className="field">
