@@ -613,3 +613,13 @@ body {
   .db-trend { width: 140px; }
   .db-trend__thumb-wrap { height: 190px; }
 }
+
+/* Hover effects for uploader profile inside reel cards */
+.db-reel__uploader-profile:hover .db-reel__biz {
+  color: #a855f7 !important;
+  text-decoration: underline;
+}
+
+.db-reel__uploader-profile:hover .db-reel__avatar {
+  transform: scale(1.1);
+}

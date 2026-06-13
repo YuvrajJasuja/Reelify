@@ -2,11 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import Navbar from "../pages/Navbar.jsx";
 import axios from "axios";
 import { API_BASE_URL } from "../api.js";
+import { useParams, useNavigate } from "react-router-dom";
 import "../css/Reels.css";
 
 function ReelCard({ reel, isMuted, toggleMute }) {
   const cardRef = useRef(null);
   const videoRef = useRef(null);
+  const navigate = useNavigate();
   const [playState, setPlayState] = useState(null);
   const [animKey, setAnimKey] = useState(0);
   const [liked, setLiked] = useState(false);
@@ -76,8 +78,14 @@ function ReelCard({ reel, isMuted, toggleMute }) {
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(reel.uploaderName)}&background=6045e2&color=fff`;
   };
 
+  const handleProfileClick = (e) => {
+    e.stopPropagation();
+    const userId = reel.uploadedBy?._id || reel.uploadedBy;
+    navigate(`/profile/${userId}`);
+  };
+
   return (
-    <div className="reel-card" ref={cardRef}>
+    <div className="reel-card" id={reel._id} ref={cardRef}>
       {/* Video element */}
       <video
         ref={videoRef}
@@ -131,10 +139,10 @@ function ReelCard({ reel, isMuted, toggleMute }) {
 
       {/* Bottom Info Overlay */}
       <div className="reel-info-overlay">
-        <div className="reel-info-header">
-          <img src={getAvatarUrl()} alt="Uploader Avatar" className="reel-avatar" />
+        <div className="reel-info-header" onClick={handleProfileClick} style={{ cursor: "pointer" }}>
+          <img src={getAvatarUrl()} alt="Uploader Avatar" className="reel-avatar" style={{ transition: "transform 0.2s" }} />
           <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-            <span className="reel-biz-name">
+            <span className="reel-biz-name" style={{ transition: "color 0.2s" }}>
               {reel.uploaderName}
               <span className="reel-verified">✓</span>
             </span>
@@ -166,6 +174,7 @@ function Reels() {
   const [reels, setReels] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const { reelId } = useParams();
 
   useEffect(() => {
     async function fetchReels() {
@@ -183,6 +192,17 @@ function Reels() {
     }
     fetchReels();
   }, []);
+
+  useEffect(() => {
+    if (reels.length > 0 && reelId) {
+      setTimeout(() => {
+        const targetElement = document.getElementById(reelId);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: "instant", block: "start" });
+        }
+      }, 100);
+    }
+  }, [reels, reelId]);
 
   const toggleMute = () => {
     setIsMuted((prev) => !prev);

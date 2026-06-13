@@ -83,4 +83,52 @@ async function getReels(req, res) {
     }
 }
 
-module.exports = { createReel, getReels };
+// Get a single reel by ID
+async function getReelById(req, res) {
+    try {
+        const reel = await reelModel.findById(req.params.reelId)
+            .populate("uploadedBy", "fullName email");
+            
+        if (!reel) {
+            return res.status(404).json({ message: "Reel not found" });
+        }
+
+        const protocol = req.protocol;
+        const host = req.get('host');
+        const doc = reel.toObject ? reel.toObject() : { ...reel };
+        if (doc.videoUrl && doc.videoUrl.startsWith('/')) {
+            doc.videoUrl = `${protocol}://${host}${doc.videoUrl}`;
+        }
+
+        res.status(200).json(doc);
+    } catch (error) {
+        console.error("Error fetching reel by ID:", error);
+        res.status(500).json({ message: "Failed to fetch reel" });
+    }
+}
+
+// Get all reels uploaded by a specific user
+async function getUserReels(req, res) {
+    try {
+        const reels = await reelModel.find({ uploadedBy: req.params.userId })
+            .sort({ createdAt: -1 });
+
+        const protocol = req.protocol;
+        const host = req.get('host');
+        
+        const mappedReels = reels.map(r => {
+            const doc = r.toObject ? r.toObject() : { ...r };
+            if (doc.videoUrl && doc.videoUrl.startsWith('/')) {
+                doc.videoUrl = `${protocol}://${host}${doc.videoUrl}`;
+            }
+            return doc;
+        });
+
+        res.status(200).json(mappedReels);
+    } catch (error) {
+        console.error("Error fetching user reels:", error);
+        res.status(500).json({ message: "Failed to fetch user reels" });
+    }
+}
+
+module.exports = { createReel, getReels, getReelById, getUserReels };

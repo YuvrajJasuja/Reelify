@@ -277,3 +277,13 @@
     padding-left: var(--nb-collapsed);
   }
 }
+
+/* Clickable creator profile zoom & highlight effects inside full-screen reel overlay */
+.reel-info-header:hover .reel-avatar {
+  transform: scale(1.08);
+}
+
+.reel-info-header:hover .reel-biz-name {
+  color: #c084fc !important;
+  text-decoration: underline;
+}

@@ -11,16 +11,35 @@ const CATEGORIES = ["All", "Food & Drink", "Fitness", "Beauty", "Technology", "L
 /* ── Sub-components ── */
 
 function ReelRow({ reel, index }) {
+  const navigate = useNavigate();
   const [saved, setSaved] = useState(false);
+  
+  const handleCardClick = () => {
+    navigate(`/reel/${reel._id}`);
+  };
+
+  const handleProfileClick = (e) => {
+    e.stopPropagation();
+    const userId = reel.uploadedBy?._id || reel.uploadedBy;
+    navigate(`/profile/${userId}`);
+  };
+
+  const getAvatarUrl = () => {
+    return `https://ui-avatars.com/api/?name=${encodeURIComponent(reel.uploaderName)}&background=6045e2&color=fff`;
+  };
+
   return (
-    <div className="db-reel" style={{ "--i": index }}>
+    <div className="db-reel" onClick={handleCardClick} style={{ "--i": index, cursor: "pointer" }}>
       <div className="db-reel__thumb-wrap">
         <video src={reel.videoUrl} className="db-reel__thumb" muted playsInline />
         <div className="db-reel__play">▶</div>
       </div>
       <div className="db-reel__body">
         <p className="db-reel__title">{reel.caption || "No caption"}</p>
-        <p className="db-reel__biz">{reel.uploaderName}</p>
+        <div className="db-reel__uploader-profile" onClick={handleProfileClick} style={{ display: "flex", alignItems: "center", gap: "8px", margin: "4px 0 8px", cursor: "pointer", width: "fit-content" }}>
+          <img src={getAvatarUrl()} alt="avatar" className="db-reel__avatar" style={{ width: "22px", height: "22px", borderRadius: "50%", border: "1.5px solid var(--db-accent)", transition: "transform 0.2s" }} />
+          <span className="db-reel__biz" style={{ margin: 0, fontSize: "13px", fontWeight: "500", transition: "color 0.2s" }}>{reel.uploaderName}</span>
+        </div>
         <div className="db-reel__stats">
           <span>📅 {new Date(reel.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
           <span className="db-reel__cat-badge" style={{
@@ -37,7 +56,7 @@ function ReelRow({ reel, index }) {
           </span>
         </div>
       </div>
-      <button className={`db-reel__save ${saved ? "db-reel__save--active" : ""}`} onClick={() => setSaved(!saved)}>
+      <button className={`db-reel__save ${saved ? "db-reel__save--active" : ""}`} onClick={(e) => { e.stopPropagation(); setSaved(!saved); }}>
         {saved ? "🔖" : "🏷"}
       </button>
     </div>

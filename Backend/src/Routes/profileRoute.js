@@ -5,5 +5,6 @@ const router = express.Router();
 
 router.get('/profile', authUserMiddleware, profileController.getProfile);
 router.put('/profile', authUserMiddleware, profileController.updateProfile);
+router.get('/profile/:userId', profileController.getPublicProfile);
 
 module.exports = router;

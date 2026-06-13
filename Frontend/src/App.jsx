@@ -8,6 +8,7 @@ import Reels from "./pages/Reels";
 import Upload from "./pages/Upload";
 import Profile from "./pages/Profile";
 import MyUploads from "./pages/MyUploads";
+import UserProfile from "./pages/UserProfile";
 
 function App() {
   return (
@@ -17,6 +18,8 @@ function App() {
           <Route path="/" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/Reels" element={<Reels />} />
+          <Route path="/reel/:reelId" element={<Reels />} />
+          <Route path="/profile/:userId" element={<UserProfile />} />
           <Route
             path="/upload"
             element={

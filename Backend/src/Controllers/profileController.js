@@ -53,7 +53,46 @@ async function updateProfile(req, res) {
     }
 }
 
+const userModel = require("../Models/userModel");
+
+async function getPublicProfile(req, res) {
+    try {
+        const { userId } = req.params;
+        const user = await userModel.findById(userId).select("fullName email");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        let profile = await profileModel.findOne({ userId });
+        
+        // If profile doesn't exist, return default values initialized with account defaults
+        if (!profile) {
+            profile = {
+                userId,
+                bio: "",
+                aboutBusiness: "",
+                contactEmail: user.email,
+                phoneNumber: "",
+                website: "",
+                location: ""
+            };
+        }
+        
+        res.status(200).json({
+            user: {
+                _id: user._id,
+                fullName: user.fullName,
+                email: user.email
+            },
+            profile
+        });
+    } catch (error) {
+        console.error("Error fetching public profile:", error);
+        res.status(500).json({ message: "Server error fetching public profile" });
+    }
+}
+
 module.exports = {
     getProfile,
-    updateProfile
+    updateProfile,
+    getPublicProfile
 };
