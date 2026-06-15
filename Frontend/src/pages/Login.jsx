@@ -30,10 +30,21 @@ const SparkleIcon = () => (
 );
 
 /* ── Sign In Form ── */
-function SignInForm({ onSuccess, message }) {
+function SignInForm({ onSuccess, message, oauthError }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(oauthError || "");
+
+  useEffect(() => {
+    if (oauthError) {
+      setError(oauthError);
+    }
+  }, [oauthError]);
+
+  const handleGoogleLogin = (e) => {
+    e.preventDefault();
+    window.location.href = `${API_BASE_URL}/api/auth/google`;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -130,18 +141,29 @@ function SignInForm({ onSuccess, message }) {
       <div className="or-divider"><span>or continue with</span></div>
 
       <div className="social-row">
-        <button className="btn-social"><GoogleIcon /> Google</button>
+        <button type="button" onClick={handleGoogleLogin} className="btn-social"><GoogleIcon /> Google</button>
       </div>
     </div>
   );
 }
 
 /* ── Sign Up Form ── */
-function SignUpForm({ onSuccess }) {
+function SignUpForm({ onSuccess, oauthError }) {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [error, setError] = useState(oauthError || "");
+
+  useEffect(() => {
+    if (oauthError) {
+      setError(oauthError);
+    }
+  }, [oauthError]);
+
+  const handleGoogleLogin = (e) => {
+    e.preventDefault();
+    window.location.href = `${API_BASE_URL}/api/auth/google`;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -221,7 +243,7 @@ function SignUpForm({ onSuccess }) {
       <div className="or-divider"><span>or sign up with</span></div>
 
       <div className="social-row">
-        <button className="btn-social"><GoogleIcon /> Google</button>
+        <button type="button" onClick={handleGoogleLogin} className="btn-social"><GoogleIcon /> Google</button>
       </div>
     </div>
   );
@@ -254,6 +276,20 @@ export default function Login() {
   const from = location.state?.from || "/";
   const redirectMessage = location.state?.message || (location.state?.from === "/upload" ? "Please login first to upload reels." : "");
 
+  const errorQuery = queryParams.get("error");
+  let oauthError = "";
+  if (errorQuery) {
+    if (errorQuery === "token_exchange_failed") {
+      oauthError = "Failed to exchange authorization token with Google.";
+    } else if (errorQuery === "no_email") {
+      oauthError = "No email address found in your Google profile.";
+    } else if (errorQuery === "server_error") {
+      oauthError = "An internal server error occurred during Google authentication.";
+    } else {
+      oauthError = "Google authentication failed. Please try again.";
+    }
+  }
+
   const handleAuthSuccess = (user) => {
     login(user);
     navigate(from, { replace: true });
@@ -268,12 +304,12 @@ export default function Login() {
 
             {/* Sign In Panel */}
             <div className="form-panel sign-in-panel">
-              <SignInForm onSuccess={handleAuthSuccess} message={redirectMessage} />
+              <SignInForm onSuccess={handleAuthSuccess} message={redirectMessage} oauthError={oauthError} />
             </div>
 
             {/* Sign Up Panel */}
             <div className="form-panel sign-up-panel">
-              <SignUpForm onSuccess={handleAuthSuccess} />
+              <SignUpForm onSuccess={handleAuthSuccess} oauthError={oauthError} />
             </div>
 
             {/* Sliding Overlay */}

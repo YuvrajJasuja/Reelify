@@ -58,7 +58,7 @@ const userModel = require("../Models/userModel");
 async function getPublicProfile(req, res) {
     try {
         const { userId } = req.params;
-        const user = await userModel.findById(userId).select("fullName email");
+        const user = await userModel.findById(userId).select("fullName email profilePicture");
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
@@ -81,7 +81,8 @@ async function getPublicProfile(req, res) {
             user: {
                 _id: user._id,
                 fullName: user.fullName,
-                email: user.email
+                email: user.email,
+                profilePicture: user.profilePicture
             },
             profile
         });

@@ -42,6 +42,7 @@ export default function UserProfile() {
 
   const getAvatarUrl = () => {
     if (!profileInfo?.user) return "";
+    if (profileInfo.user.profilePicture) return profileInfo.user.profilePicture;
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(profileInfo.user.fullName)}&background=6045e2&color=fff&size=128`;
   };
 

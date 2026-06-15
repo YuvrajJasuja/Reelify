@@ -63,7 +63,7 @@ async function getReels(req, res) {
         // Fetch sorted by newest first, populate uploader info
         const reels = await reelModel.find()
             .sort({ createdAt: -1 })
-            .populate("uploadedBy", "fullName email");
+            .populate("uploadedBy", "fullName email profilePicture");
             
         const protocol = req.protocol;
         const host = req.get('host');
@@ -88,7 +88,7 @@ async function getReels(req, res) {
 async function getReelById(req, res) {
     try {
         const reel = await reelModel.findById(req.params.reelId)
-            .populate("uploadedBy", "fullName email");
+            .populate("uploadedBy", "fullName email profilePicture");
             
         if (!reel) {
             return res.status(404).json({ message: "Reel not found" });

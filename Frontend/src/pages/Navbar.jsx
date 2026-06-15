@@ -238,7 +238,7 @@ export default function Navbar({ onNavigate }) {
                   <>
                     <span className="nb__icon-wrap nb__avatar-wrap">
                       <img
-                        src="https://i.pravatar.cc/40?img=12"
+                        src={user?.profilePicture || "https://i.pravatar.cc/40?img=12"}
                         alt="Profile"
                         className={`nb__avatar ${
                           isActive ? "nb__avatar--active" : ""

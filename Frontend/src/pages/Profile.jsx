@@ -209,7 +209,7 @@ export default function Profile() {
                 boxShadow: "0 8px 25px rgba(96,69,226,0.25)"
               }}>
                 <img
-                  src="https://i.pravatar.cc/100?img=12"
+                  src={user?.profilePicture || "https://i.pravatar.cc/100?img=12"}
                   alt="Profile Avatar"
                   style={{
                     width: "100%",
