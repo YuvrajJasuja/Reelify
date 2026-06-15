@@ -2,27 +2,27 @@ const userModel = require("../Models/userModel");
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-async function createUser(req,res){
-    const { fullName,email,password } = req.body;
-    const isUserAlreadyExists = await userModel.findOne({email})
-    if(isUserAlreadyExists){
+async function createUser(req, res) {
+    const { fullName, email, password } = req.body;
+    const isUserAlreadyExists = await userModel.findOne({ email })
+    if (isUserAlreadyExists) {
         return res.status(400).json({
-            message:"user exists with same email"
+            message: "user exists with same email"
         })
     }
 
 
-const hashedPassword = await bcrypt.hash(password,10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-const user = await userModel.create({
-    fullName,email,password:hashedPassword
-})
+    const user = await userModel.create({
+        fullName, email, password: hashedPassword
+    })
 
-  const token = jwt.sign(
-    { userId: user._id },   // payload
-    process.env.JWT_SECRET, // secret key
-    { expiresIn: "1d" }     // expiry
-  );
+    const token = jwt.sign(
+        { userId: user._id },   // payload
+        process.env.JWT_SECRET, // secret key
+        { expiresIn: "1d" }     // expiry
+    );
 
     res.cookie("token", token)
 
@@ -61,7 +61,7 @@ async function loginUser(req, res) {
 
     const token = jwt.sign({
         userId: user._id,
-    }, process.env.JWT_SECRET,{ expiresIn: "1d" })
+    }, process.env.JWT_SECRET, { expiresIn: "1d" })
 
     res.cookie("token", token)
 
@@ -99,13 +99,13 @@ async function getMe(req, res) {
 
 async function googleAuthRedirect(req, res) {
     const clientId = process.env.CLIENT_ID.trim();
-    const redirectUri = `${process.env.BACKEND_URL || 'http://localhost:1000'}/api/auth/google/callback`;
+    const redirectUri = `${process.env.BACKEND_URL || 'https://reelify-bqci.onrender.com'}/api/auth/google/callback`;
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
-      `client_id=${clientId}&` +
-      `redirect_uri=${encodeURIComponent(redirectUri)}&` +
-      `response_type=code&` +
-      `scope=${encodeURIComponent('profile email')}&` +
-      `prompt=select_account`;
+        `client_id=${clientId}&` +
+        `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+        `response_type=code&` +
+        `scope=${encodeURIComponent('profile email')}&` +
+        `prompt=select_account`;
     res.redirect(googleAuthUrl);
 }
 
@@ -124,7 +124,7 @@ async function googleAuthCallback(req, res) {
                 code,
                 client_id: process.env.CLIENT_ID.trim(),
                 client_secret: process.env.CLIENT_SECRET.trim(),
-                redirect_uri: `${process.env.BACKEND_URL || 'http://localhost:1000'}/api/auth/google/callback`,
+                redirect_uri: `${process.env.BACKEND_URL || 'https://reelify-bqci.onrender.com'}/api/auth/google/callback`,
                 grant_type: 'authorization_code'
             })
         });
@@ -189,7 +189,7 @@ async function googleAuthCallback(req, res) {
     }
 }
 
-module.exports={
+module.exports = {
     createUser,
     loginUser,
     logoutUser,
