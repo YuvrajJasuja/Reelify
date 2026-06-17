@@ -43,7 +43,7 @@ function SignInForm({ onSuccess, message, oauthError }) {
 
   const handleGoogleLogin = (e) => {
     e.preventDefault();
-    window.location.href = `${API_BASE_URL}/api/auth/google`;
+    window.location.href = `${API_BASE_URL}/api/auth/google?frontend_url=${encodeURIComponent(window.location.origin)}`;
   };
 
   const handleSubmit = async (e) => {
@@ -162,7 +162,7 @@ function SignUpForm({ onSuccess, oauthError }) {
 
   const handleGoogleLogin = (e) => {
     e.preventDefault();
-    window.location.href = `${API_BASE_URL}/api/auth/google`;
+    window.location.href = `${API_BASE_URL}/api/auth/google?frontend_url=${encodeURIComponent(window.location.origin)}`;
   };
 
   const handleSubmit = async (e) => {

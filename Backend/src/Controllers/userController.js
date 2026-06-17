@@ -101,12 +101,14 @@ async function getMe(req, res) {
 
 async function googleAuthRedirect(req, res) {
     const clientId = process.env.CLIENT_ID.trim();
+    const frontendUrl = req.query.frontend_url || process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app';
     const redirectUri = `${process.env.BACKEND_URL || 'https://reelify-bqci.onrender.com'}/api/auth/google/callback`;
     const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?` +
         `client_id=${clientId}&` +
         `redirect_uri=${encodeURIComponent(redirectUri)}&` +
         `response_type=code&` +
         `scope=${encodeURIComponent('profile email')}&` +
+        `state=${encodeURIComponent(frontendUrl)}&` +
         `prompt=select_account`;
         console.log("Redirect URI:", redirectUri);
     res.redirect(googleAuthUrl);
@@ -114,9 +116,10 @@ async function googleAuthRedirect(req, res) {
 
 async function googleAuthCallback(req, res) {
     try {
-        const { code } = req.query;
+        const { code, state } = req.query;
+        const frontendUrl = state || process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app';
         if (!code) {
-            return res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/login?error=no_code`);
+            return res.redirect(`${frontendUrl}/login?error=no_code`);
         }
 
         // Exchange code for token using fetch
@@ -135,7 +138,7 @@ async function googleAuthCallback(req, res) {
         const tokenData = await tokenResponse.json();
         if (!tokenData.access_token) {
             console.error('Error exchanging Google OAuth code:', tokenData);
-            return res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/login?error=token_exchange_failed`);
+            return res.redirect(`${frontendUrl}/login?error=token_exchange_failed`);
         }
 
         // Fetch user profile info
@@ -146,7 +149,7 @@ async function googleAuthCallback(req, res) {
 
         if (!profileData.email) {
             console.error('Google profile info contains no email:', profileData);
-            return res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/login?error=no_email`);
+            return res.redirect(`${frontendUrl}/login?error=no_email`);
         }
 
         // Find or create user
@@ -185,10 +188,11 @@ async function googleAuthCallback(req, res) {
         res.cookie("token", token);
 
         // Redirect to Frontend Auth Success page with token
-        res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/auth-success?token=${token}`);
+        res.redirect(`${frontendUrl}/auth-success?token=${token}`);
     } catch (error) {
         console.error("Error in Google Auth callback:", error);
-        res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/login?error=server_error`);
+        const frontendUrl = req.query.state || process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app';
+        res.redirect(`${frontendUrl}/login?error=server_error`);
     }
 }
 

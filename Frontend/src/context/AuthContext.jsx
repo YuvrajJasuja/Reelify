@@ -32,6 +32,10 @@ export function AuthProvider({ children }) {
   // Check auth state on mount/refresh
   useEffect(() => {
     const checkAuth = async () => {
+      if (window.location.pathname === "/auth-success") {
+        setLoading(false);
+        return;
+      }
       try {
         const response = await axios.get(`${API_BASE_URL}/api/user/me`, {
           withCredentials: true,

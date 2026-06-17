@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 async function authUserMiddleware(req, res, next) {
     const authHeader = req.headers.authorization;
     const bearerToken = authHeader && authHeader.startsWith('Bearer ') ? authHeader.split(' ')[1] : null;
-    const token = req.cookies.token || bearerToken;
+    const token = bearerToken || req.cookies.token;
 
     if (!token) {
         return res.status(401).json({
