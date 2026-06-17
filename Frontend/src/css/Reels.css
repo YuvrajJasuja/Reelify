@@ -326,3 +326,24 @@
   color: #c084fc !important;
   text-decoration: underline;
 }
+
+/* ── Touch target expansions for mobile ── */
+@media (max-width: 768px) {
+  .reel-action-btn,
+  .reel-mute-btn {
+    position: relative;
+  }
+  .reel-action-btn::before,
+  .reel-mute-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    z-index: 10;
+  }
+}

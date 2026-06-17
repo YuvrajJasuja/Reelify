@@ -614,6 +614,15 @@ body {
   .db {
     padding: 16px 12px 80px;
   }
+  .db__header-right {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+  .db__upload-btn {
+    justify-content: center;
+    width: 100%;
+  }
   .db__stats { grid-template-columns: 1fr 1fr; }
   .db-stat {
     padding: 14px 12px;
@@ -767,4 +776,28 @@ body {
 @keyframes modal-scale-up {
   from { transform: scale(0.95); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
+}
+
+/* ── Touch target expansions for mobile ── */
+@media (max-width: 768px) {
+  .db-reel__save,
+  .db-reel__delete-btn,
+  .db-trend__like {
+    position: relative;
+  }
+  
+  .db-reel__save::before,
+  .db-reel__delete-btn::before,
+  .db-trend__like::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    z-index: 10;
+  }
 }

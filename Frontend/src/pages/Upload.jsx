@@ -112,9 +112,9 @@ export default function Upload() {
       : `${(bytes / 1024).toFixed(1)} KB`;
 
   return (
-    <div style={{ display: "flex" }}>
+    <div>
       <Navbar />
-      <div className="upload-page" style={{ flex: 1 }}>
+      <div className="upload-page">
         <div className="upload-bg">
           <div className="orb orb-a" />
           <div className="orb orb-b" />

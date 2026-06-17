@@ -296,7 +296,7 @@ export default function Login() {
   };
 
   return (
-    <div style={{ display: "flex" }}>
+    <div>
       <Navbar/>
       <div className="auth-page">
         <div className="auth-wrapper">

@@ -47,9 +47,9 @@ export default function UserProfile() {
   };
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#0a0910" }}>
+    <div style={{ minHeight: "100vh", background: "#0a0910" }}>
       <Navbar />
-      <div className="db" style={{ flex: 1 }}>
+      <div className="db">
         {loading ? (
           <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "60vh", color: "var(--db-text-soft)", flexDirection: "column", gap: "15px" }}>
             <div className="reels-loading-spinner" style={{

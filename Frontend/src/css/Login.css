@@ -240,6 +240,7 @@
   justify-content: center;
   gap: 8px;
   padding: 11px 10px;
+  min-height: 44px;
   border: 1.5px solid var(--border);
   border-radius: var(--radius-input);
   background: var(--surface);
@@ -387,6 +388,10 @@
 /* ── Ghost button on overlay ── */
 .btn-ghost {
   padding: 11px 28px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1.5px solid rgba(255,255,255,0.20);
   border-radius: 50px;
   background: transparent;
@@ -406,7 +411,14 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 720px) {
+@media (max-width: 768px) {
+  .auth-page {
+    margin-left: 0;
+    padding-bottom: 80px;
+    width: 100%;
+    min-width: 0;
+  }
+
   .auth-wrapper { height: auto; border-radius: 16px; }
   .auth-container { display: flex; flex-direction: column; }
 
@@ -429,13 +441,6 @@
   .overlay-half.right { display: none; }
   .auth-container.active .overlay-half.left { display: none; }
   .auth-container.active .overlay-half.right { display: flex; opacity: 1 !important; transform: none !important; }
-}
-
-@media (max-width: 768px) {
-  .auth-page {
-    margin-left: 0;
-    padding-bottom: 80px;
-  }
 }
 
 @media (max-width: 420px) {

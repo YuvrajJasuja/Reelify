@@ -134,7 +134,7 @@ export default function Profile() {
   const isContactEmpty = !profileData.contactEmail && !profileData.phoneNumber && !profileData.website && !profileData.location;
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#0a0910" }}>
+    <div style={{ minHeight: "100vh", background: "#0a0910" }}>
       <Navbar />
       
       {/* Success Toast */}
@@ -144,7 +144,7 @@ export default function Profile() {
         </div>
       )}
 
-      <div className="db" style={{ flex: 1 }}>
+      <div className="db">
         {/* Header */}
         <header className="db__header">
           <div className="db__header-left">

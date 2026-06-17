@@ -125,7 +125,7 @@ export default function MyUploads() {
   };
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "#0a0910" }}>
+    <div style={{ minHeight: "100vh", background: "#0a0910" }}>
       <Navbar />
       
       {/* Toast Alert */}
@@ -149,7 +149,7 @@ export default function MyUploads() {
         </div>
       )}
 
-      <div className="db" style={{ flex: 1 }}>
+      <div className="db">
         {/* Header */}
         <header className="db__header">
           <div className="db__header-left">
