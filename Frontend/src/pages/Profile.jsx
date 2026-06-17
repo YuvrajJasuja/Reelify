@@ -176,19 +176,7 @@ export default function Profile() {
         ) : (
           <>
             {/* Profile Banner / Details */}
-            <section className="db__section" style={{
-              background: "var(--db-surface)",
-              border: "1px solid var(--db-border)",
-              borderRadius: "var(--db-radius)",
-              padding: "40px",
-              marginBottom: "36px",
-              display: "flex",
-              gap: "30px",
-              alignItems: "center",
-              flexWrap: "wrap",
-              position: "relative",
-              overflow: "hidden"
-            }}>
+            <section className="pf-header-banner">
               <div style={{
                 position: "absolute",
                 width: "300px",
@@ -222,7 +210,7 @@ export default function Profile() {
               </div>
 
               {/* Basic Info */}
-              <div style={{ flex: 1, minWidth: "250px", zIndex: 1 }}>
+              <div className="pf-header-info">
                 <h2 style={{ fontSize: "24px", fontWeight: "700", color: "#fff", marginBottom: "4px" }}>
                   {user?.fullName || "Valued User"}
                 </h2>

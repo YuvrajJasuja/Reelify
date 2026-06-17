@@ -430,8 +430,15 @@
   .auth-container.active .overlay-half.right { display: flex; opacity: 1 !important; transform: none !important; }
 }
 
+@media (max-width: 768px) {
+  .auth-page {
+    margin-left: 0;
+    padding-bottom: 80px;
+  }
+}
+
 @media (max-width: 420px) {
-  .auth-page { padding: 12px; }
+  .auth-page { padding: 12px 12px 80px; }
   .form-panel { padding: 28px 20px; }
   .form-title { font-size: 24px; }
   .social-row { flex-direction: column; }

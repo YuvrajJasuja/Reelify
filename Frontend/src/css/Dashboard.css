@@ -609,9 +609,27 @@ body {
 }
 
 @media (max-width: 480px) {
+  .db {
+    padding: 16px 12px 80px;
+  }
   .db__stats { grid-template-columns: 1fr 1fr; }
   .db-trend { width: 140px; }
   .db-trend__thumb-wrap { height: 190px; }
+  .db-reel {
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  .db-reel__title {
+    font-size: 13.5px;
+  }
+  .db-reel__biz {
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  .db-reel__stats {
+    flex-wrap: wrap;
+    gap: 4px 8px;
+  }
 }
 
 /* Hover effects for uploader profile inside reel cards */

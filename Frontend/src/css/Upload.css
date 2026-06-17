@@ -7,7 +7,7 @@
 
 /* ── Variables ─────────────────────────────────────────────── */
 :root {
-  --nav-width: 64px;          /* adjust to match your Navbar */
+  --nav-width: 72px;          /* adjust to match your Navbar */
   --bg:        #0d0d1a;       /* near-black navy */
   --bg-panel:  #11112b;       /* slightly lighter navy for right panel */
   --purple:    #5b4ef8;       /* primary violet (matches Sign In button) */
@@ -529,7 +529,7 @@
 @media (max-width: 768px) {
   .upload-page {
     margin-left: 0;
-    padding: 20px 16px;
+    padding: 20px 16px 80px;
     align-items: flex-start;
   }
 
@@ -544,4 +544,30 @@
   }
 
   .card-heading { font-size: 26px; }
+}
+
+@media (max-width: 480px) {
+  .upload-page {
+    padding: 16px 10px 80px;
+  }
+  .upload-card {
+    padding: 24px 20px 20px;
+  }
+  .card-heading {
+    font-size: 22px;
+  }
+  .drop-zone {
+    padding: 16px 12px;
+  }
+  .drop-icon {
+    width: 40px;
+    height: 40px;
+  }
+  .btn-upload {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  .upload-panel {
+    padding: 24px 20px;
+  }
 }

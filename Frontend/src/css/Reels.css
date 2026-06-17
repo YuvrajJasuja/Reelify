@@ -272,9 +272,39 @@
 }
 
 /* Adjust layout spacing for navbar layout compatibility on desktop */
-@media (min-width: 481px) {
+@media (min-width: 769px) {
   .reels-page {
     padding-left: var(--nb-collapsed);
+  }
+}
+
+@media (max-width: 768px) {
+  .reels-page {
+    padding-left: 0;
+    height: calc(100vh - 72px);
+  }
+  .reels-feed {
+    height: calc(100vh - 72px);
+  }
+  .reel-card {
+    height: calc(100vh - 72px);
+    min-height: calc(100vh - 72px);
+  }
+}
+
+@media (max-width: 480px) {
+  .reel-info-overlay {
+    padding: 3rem 4.5rem 1.5rem 1rem;
+  }
+  .reel-actions {
+    right: 0.75rem;
+    bottom: 1.5rem;
+    gap: 0.88rem;
+  }
+  .reel-action-btn {
+    width: 38px;
+    height: 38px;
+    font-size: 1rem;
   }
 }
 
