@@ -113,7 +113,7 @@ async function googleAuthCallback(req, res) {
     try {
         const { code } = req.query;
         if (!code) {
-            return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=no_code`);
+            return res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/login?error=no_code`);
         }
 
         // Exchange code for token using fetch
@@ -132,7 +132,7 @@ async function googleAuthCallback(req, res) {
         const tokenData = await tokenResponse.json();
         if (!tokenData.access_token) {
             console.error('Error exchanging Google OAuth code:', tokenData);
-            return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=token_exchange_failed`);
+            return res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/login?error=token_exchange_failed`);
         }
 
         // Fetch user profile info
@@ -143,7 +143,7 @@ async function googleAuthCallback(req, res) {
 
         if (!profileData.email) {
             console.error('Google profile info contains no email:', profileData);
-            return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=no_email`);
+            return res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/login?error=no_email`);
         }
 
         // Find or create user
@@ -182,10 +182,10 @@ async function googleAuthCallback(req, res) {
         res.cookie("token", token);
 
         // Redirect to Frontend Dashboard page
-        res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/`);
+        res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/`);
     } catch (error) {
         console.error("Error in Google Auth callback:", error);
-        res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:5173'}/login?error=server_error`);
+        res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/login?error=server_error`);
     }
 }
 
