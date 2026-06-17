@@ -58,7 +58,7 @@ function SignInForm({ onSuccess, message, oauthError }) {
       );
 
       console.log("Login successful:", response.data);
-      onSuccess(response.data.user);
+      onSuccess(response.data.user, response.data.token);
     } catch (error) {
       console.error("Login failed:", error.response?.data);
       setError(error.response?.data?.message || "Login failed. Please check your credentials.");
@@ -176,7 +176,7 @@ function SignUpForm({ onSuccess, oauthError }) {
         { withCredentials: true }
       );
       console.log("Account created successfully:", response.data);
-      onSuccess(response.data.user);
+      onSuccess(response.data.user, response.data.token);
     } catch (error) {
       console.error("Signup failed:", error.response?.data);
       setError(error.response?.data?.message || "Signup failed. Please try again.");
@@ -290,8 +290,8 @@ export default function Login() {
     }
   }
 
-  const handleAuthSuccess = (user) => {
-    login(user);
+  const handleAuthSuccess = (user, token) => {
+    login(user, token);
     navigate(from, { replace: true });
   };
 

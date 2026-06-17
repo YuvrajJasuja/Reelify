@@ -32,7 +32,7 @@ app.use(cookieParser());
 // Serve static uploads
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const port = 1000;
+const port = process.env.PORT || 1000;
 
 // Connect to Database
 connectDB();
@@ -47,5 +47,5 @@ app.use('/api', reelRoute);
 app.use('/api', profileRoute);
 
 app.listen(port, () => {
-    console.log(`✓ Server started at http://localhost:${port}`);
+    console.log(`✓ Server started on port ${port}`);
 });

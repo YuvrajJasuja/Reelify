@@ -2,6 +2,20 @@ import { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../api.js";
 
+// Axios request interceptor to automatically attach Authorization header Bearer token
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
@@ -28,11 +42,13 @@ export function AuthProvider({ children }) {
         } else {
           setUser(null);
           localStorage.removeItem("user");
+          localStorage.removeItem("token");
         }
       } catch (error) {
         console.error("Session check failed or unauthenticated:", error.message);
         setUser(null);
         localStorage.removeItem("user");
+        localStorage.removeItem("token");
       } finally {
         setLoading(false);
       }
@@ -41,9 +57,34 @@ export function AuthProvider({ children }) {
     checkAuth();
   }, []);
 
-  const login = (userData) => {
+  const login = (userData, token) => {
     setUser(userData);
     localStorage.setItem("user", JSON.stringify(userData));
+    if (token) {
+      localStorage.setItem("token", token);
+    }
+  };
+
+  const loginWithToken = async (token) => {
+    localStorage.setItem("token", token);
+    try {
+      const response = await axios.get(`${API_BASE_URL}/api/user/me`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.data && response.data.user) {
+        setUser(response.data.user);
+        localStorage.setItem("user", JSON.stringify(response.data.user));
+        return response.data.user;
+      } else {
+        throw new Error("No user profile returned");
+      }
+    } catch (error) {
+      console.error("Login with token failed:", error);
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      setUser(null);
+      throw error;
+    }
   };
 
   const logout = async () => {
@@ -56,11 +97,12 @@ export function AuthProvider({ children }) {
     } finally {
       setUser(null);
       localStorage.removeItem("user");
+      localStorage.removeItem("token");
     }
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, loginWithToken, logout }}>
       {children}
     </AuthContext.Provider>
   );

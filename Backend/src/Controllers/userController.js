@@ -28,6 +28,7 @@ async function createUser(req, res) {
 
     res.status(201).json({
         message: "User registered successfully",
+        token: token,
         user: {
             _id: user._id,
             email: user.email,
@@ -67,6 +68,7 @@ async function loginUser(req, res) {
 
     res.status(200).json({
         message: "User logged in successfully",
+        token: token,
         user: {
             _id: user._id,
             email: user.email,
@@ -106,6 +108,7 @@ async function googleAuthRedirect(req, res) {
         `response_type=code&` +
         `scope=${encodeURIComponent('profile email')}&` +
         `prompt=select_account`;
+        console.log("Redirect URI:", redirectUri);
     res.redirect(googleAuthUrl);
 }
 
@@ -181,8 +184,8 @@ async function googleAuthCallback(req, res) {
         // Store cookie exact same way
         res.cookie("token", token);
 
-        // Redirect to Frontend Dashboard page
-        res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/`);
+        // Redirect to Frontend Auth Success page with token
+        res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/auth-success?token=${token}`);
     } catch (error) {
         console.error("Error in Google Auth callback:", error);
         res.redirect(`${process.env.FRONTEND_URL || 'https://reelifybusiness.vercel.app'}/login?error=server_error`);

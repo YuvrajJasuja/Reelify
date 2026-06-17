@@ -9,6 +9,7 @@ import Upload from "./pages/Upload";
 import Profile from "./pages/Profile";
 import MyUploads from "./pages/MyUploads";
 import UserProfile from "./pages/UserProfile";
+import AuthSuccess from "./pages/AuthSuccess";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/auth-success" element={<AuthSuccess />} />
           <Route path="/Reels" element={<Reels />} />
           <Route path="/reel/:reelId" element={<Reels />} />
           <Route path="/profile/:userId" element={<UserProfile />} />
