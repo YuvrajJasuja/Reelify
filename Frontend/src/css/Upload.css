@@ -33,6 +33,7 @@
 .upload-page {
   position: relative;
   min-height: 100vh;
+  min-height: 100dvh;
   margin-left: var(--nav-width);   /* leave room for left Navbar */
   background: var(--bg);
   display: flex;
